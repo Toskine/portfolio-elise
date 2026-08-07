@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Portfolio des peintures d'Elise. Découvrez des œuvres vibrantes et colorées." />
+    <title>Elise | Art Portfolio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600&family=Outfit:wght@300;400;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/src/style.css" />
+  </head>
+  <body>
+    <nav class="navbar">
+      <div class="logo">Élise.</div>
+      <ul class="nav-links">
+        <li><a href="#home">Accueil</a></li>
+        <li><a href="#gallery">Galerie</a></li>
+        <li><a href="#about">À Propos</a></li>
+        <li><a href="#contact" class="btn-nav">Contact</a></li>
+      </ul>
+    </nav>
+
+    <main>
+      <section id="home" class="hero">
+        <div class="hero-content">
+          <h1>Art <span class="script-accent">vibrant &</span> Coloré</h1>
+          <p>Plongez dans l'univers de mes peintures expressives. Des couleurs audacieuses pour des émotions vraies.</p>
+          <a href="#gallery" class="btn-primary">Découvrir le portfolio</a>
+        </div>
+      </section>
+
+      <section id="gallery" class="gallery-section">
+        <h2>Sélection d'œuvres</h2>
+        <div class="gallery-grid">
+          <div class="gallery-item">
+            <img src="/images/elise_1.jpeg" alt="Peinture d'Elise" loading="lazy">
+            <div class="gallery-info">
+              <h3>Œuvre 1</h3>
+              <p>Peinture</p>
+            </div>
+          </div>
+          <div class="gallery-item">
+            <img src="/images/elise_2.jpeg" alt="Peinture d'Elise" loading="lazy">
+            <div class="gallery-info">
+              <h3>Œuvre 2</h3>
+              <p>Peinture</p>
+            </div>
+          </div>
+          <div class="gallery-item">
+            <img src="/images/elise_3.jpeg" alt="Peinture d'Elise" loading="lazy">
+            <div class="gallery-info">
+              <h3>Œuvre 3</h3>
+              <p>Peinture</p>
+            </div>
+          </div>
+          <div class="gallery-item">
+            <img src="/images/elise_4.jpeg" alt="Peinture d'Elise" loading="lazy">
+            <div class="gallery-info">
+              <h3>Œuvre 4</h3>
+              <p>Peinture</p>
+            </div>
+          </div>
+          <div class="gallery-item">
+            <img src="/images/elise_5.jpeg" alt="Peinture d'Elise" loading="lazy">
+            <div class="gallery-info">
+              <h3>Œuvre 5</h3>
+              <p>Peinture</p>
+            </div>
+          </div>
+          <div class="gallery-item">
+            <img src="/images/elise_6.jpeg" alt="Peinture d'Elise" loading="lazy">
+            <div class="gallery-info">
+              <h3>Œuvre 6</h3>
+              <p>Peinture</p>
+            </div>
+          </div>
+          <div class="gallery-item">
+            <img src="/images/elise_7.jpeg" alt="Peinture d'Elise" loading="lazy">
+            <div class="gallery-info">
+              <h3>Œuvre 7</h3>
+              <p>Peinture</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="about" class="about-section">
+        <div class="about-container">
+          <div class="about-text">
+            <h2><span class="script-accent">À Propos d'</span> Élise</h2>
+            <p>Passionnée par les couleurs et les formes, j'explore différentes techniques pour donner vie à mes émotions sur la toile. Chaque peinture est une invitation au voyage, une expression brute de ce que je ressens face au monde qui m'entoure.</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="contact" class="contact-section">
+        <h2>Me Contacter</h2>
+        <p>Intéressé(e) par une œuvre ou une collaboration ?</p>
+        <form class="contact-form" onsubmit="event.preventDefault(); alert('Le formulaire est en cours de développement.');">
+          <input type="text" placeholder="Votre nom" required>
+          <input type="email" placeholder="Votre email" required>
+          <textarea placeholder="Votre message" rows="5" required></textarea>
+          <button type="submit" class="btn-primary">Envoyer le message</button>
+        </form>
+      </section>
+    </main>
+
+    <footer>
+      <p>&copy; 2026 Élise Art. Tous droits réservés.</p>
+    </footer>
+
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
