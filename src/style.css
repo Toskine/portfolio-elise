@@ -323,12 +323,11 @@ h2 {
   color: var(--text-dark);
   font-family: var(--font-body);
   font-size: 1rem;
+  transition: var(--transition);
 }
 
 .contact-form textarea {
   resize: none;
-}
-  transition: var(--transition);
 }
 
 .contact-form input:focus,
