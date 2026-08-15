@@ -54,7 +54,8 @@ if (galleryGrids.length > 0) {
     if (folder === 'vendues') {
       imageEntries = imageEntries.filter(([path, url]) => {
         const parts = decodeURIComponent(url).split('/').pop().split('.')[0].split('_');
-        return parts[3] === 'vendu';
+        const statusPart = parts[3] || '';
+        return statusPart.startsWith('vendu');
       });
     }
 
@@ -63,8 +64,8 @@ if (galleryGrids.length > 0) {
       const partsA = decodeURIComponent(a[1]).split('/').pop().split('.')[0].split('_');
       const partsB = decodeURIComponent(b[1]).split('/').pop().split('.')[0].split('_');
       
-      const statusA = partsA[3] || 'dispo';
-      const statusB = partsB[3] || 'dispo';
+      const statusA = (partsA[3] || '').startsWith('vendu') ? 'vendu' : 'dispo';
+      const statusB = (partsB[3] || '').startsWith('vendu') ? 'vendu' : 'dispo';
       
       // 1. Status (dispo d'abord)
       if (statusA !== statusB) {
@@ -95,7 +96,8 @@ if (galleryGrids.length > 0) {
       let title = parts[0] || filename;
       let size = parts[1] || "";
       let type = parts[2] || "Acrylique";
-      let status = parts[3] || "dispo";
+      let statusPart = parts[3] || "dispo";
+      let status = statusPart.startsWith('vendu') ? 'vendu' : 'dispo';
       
       let subtitle = size ? `${type} - ${size}` : type;
 
