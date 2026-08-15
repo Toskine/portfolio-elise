@@ -56,7 +56,8 @@ if (galleryGrids.length > 0) {
         const parts = decodeURIComponent(url).split('/').pop().split('.')[0].split('_');
         if (/^\d+$/.test(parts[0])) parts.shift();
         const statusPart = parts[3] || '';
-        return statusPart.startsWith('vendu');
+        const cleanStatus = statusPart.split('-')[0];
+        return cleanStatus === 'vendu';
       });
     }
 
@@ -70,7 +71,8 @@ if (galleryGrids.length > 0) {
         }
         const title = parts[0] || '';
         const statusPart = parts[3] || 'dispo';
-        const isSold = statusPart.startsWith('vendu');
+        const cleanStatus = statusPart.split('-')[0];
+        const isSold = cleanStatus === 'vendu';
         return { order, title, isSold };
       };
 
@@ -110,9 +112,10 @@ if (galleryGrids.length > 0) {
       let size = parts[1] || "";
       let type = parts[2] || "Acrylique";
       let statusPart = parts[3] || "dispo";
+      let cleanStatus = statusPart.split('-')[0];
       
-      let isSold = statusPart.startsWith('vendu');
-      let price = (!isSold && statusPart !== 'dispo') ? statusPart : null;
+      let isSold = cleanStatus === 'vendu';
+      let price = (!isSold && cleanStatus !== 'dispo') ? cleanStatus : null;
       
       let subtitle = size ? `${type} - ${size}` : type;
 
