@@ -255,6 +255,22 @@ h2 {
   pointer-events: none;
 }
 
+.price-badge {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background-color: #8fce9d; /* Vert pastel */
+  color: #1a4a2b; /* Vert foncé pour lisibilité */
+  padding: 5px 12px;
+  font-weight: 800;
+  border-radius: 20px;
+  z-index: 5;
+  font-size: 1rem;
+  letter-spacing: 1px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+  pointer-events: none;
+}
+
 /* About Section */
 .about-section {
   padding: 8rem 5%;
@@ -307,6 +323,11 @@ h2 {
   color: var(--text-dark);
   font-family: var(--font-body);
   font-size: 1rem;
+}
+
+.contact-form textarea {
+  resize: none;
+}
   transition: var(--transition);
 }
 
