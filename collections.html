@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Portfolio des peintures d'Elise. Découvrez les collections thématiques." />
+    <title>Elise | Collections</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600&family=Outfit:wght@300;400;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/src/style.css" />
+  </head>
+  <body>
+    <nav class="navbar">
+      <div class="logo">Élise.</div>
+      <ul class="nav-links">
+        <li><a href="index.html#home">Accueil</a></li>
+        <li><a href="index.html#gallery">Galerie</a></li>
+        <li><a href="collections.html">Collections</a></li>
+        <li><a href="index.html#about">À Propos</a></li>
+        <li><a href="index.html#vendues">Œuvres Vendues</a></li>
+        <li><a href="index.html#contact" class="btn-nav">Contact</a></li>
+      </ul>
+    </nav>
+
+    <main style="padding-top: 100px;">
+      <section class="hero" style="min-height: 30vh; background-color: var(--secondary-peach);">
+        <div class="hero-content">
+          <h1 style="color: var(--bg-cream); font-size: 4rem;">Collections</h1>
+        </div>
+      </section>
+
+      <section id="marine" class="gallery-section" style="background-color: var(--card-light); margin-top: 4rem;">
+        <h2 style="color: var(--primary-coral);">Collection <span class="script-accent">Marine</span></h2>
+        <div class="gallery-grid" data-folder="collections/marine">
+          <!-- Les images seront insérées dynamiquement ici par main.js -->
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <p>&copy; 2026 Élise Art. Tous droits réservés.</p>
+    </footer>
+
+    <!-- Lightbox Modal -->
+    <div id="lightbox" class="lightbox">
+      <span class="close-btn" id="lightbox-close">&times;</span>
+      <div id="lightbox-wrapper" class="lightbox-wrapper">
+        <img class="lightbox-content" id="lightbox-img">
+      </div>
+    </div>
+
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
