@@ -54,50 +54,65 @@ if (galleryGrids.length > 0) {
     if (folder === 'vendues') {
       imageEntries = imageEntries.filter(([path, url]) => {
         const parts = decodeURIComponent(url).split('/').pop().split('.')[0].split('_');
+        if (/^\d+$/.test(parts[0])) parts.shift();
         const statusPart = parts[3] || '';
         return statusPart.startsWith('vendu');
       });
     }
 
-    // Tri intelligent (1. Dispo en premier, 2. Groupé par dossier, 3. Ordre alphabétique)
+    // Tri intelligent (1. Dispo en premier, 2. Ordre custom, 3. Dossier, 4. Alphabétique)
     imageEntries.sort((a, b) => {
-      const partsA = decodeURIComponent(a[1]).split('/').pop().split('.')[0].split('_');
-      const partsB = decodeURIComponent(b[1]).split('/').pop().split('.')[0].split('_');
-      
-      const statusA = (partsA[3] || '').startsWith('vendu') ? 'vendu' : 'dispo';
-      const statusB = (partsB[3] || '').startsWith('vendu') ? 'vendu' : 'dispo';
+      const getMeta = (url) => {
+        const parts = decodeURIComponent(url).split('/').pop().split('.')[0].split('_');
+        let order = 9999;
+        if (/^\d+$/.test(parts[0])) {
+          order = parseInt(parts.shift(), 10);
+        }
+        const title = parts[0] || '';
+        const statusPart = parts[3] || 'dispo';
+        const isSold = statusPart.startsWith('vendu');
+        return { order, title, isSold };
+      };
+
+      const metaA = getMeta(a[1]);
+      const metaB = getMeta(b[1]);
       
       // 1. Status (dispo d'abord)
-      if (statusA !== statusB) {
-        return statusA === 'dispo' ? -1 : 1;
+      if (metaA.isSold !== metaB.isSold) {
+        return metaA.isSold ? 1 : -1;
       }
       
-      // 2. Dossier (les collections marines ensemble)
+      // 2. Ordre custom (01_, 02_...)
+      if (metaA.order !== metaB.order) {
+        return metaA.order - metaB.order;
+      }
+
+      // 3. Dossier (les collections marines ensemble)
       const folderA = a[0].includes('collections/') ? 1 : 0;
       const folderB = b[0].includes('collections/') ? 1 : 0;
       if (folderA !== folderB) {
         return folderA - folderB;
       }
       
-      // 3. Titre
-      const titleA = partsA[0] || '';
-      const titleB = partsB[0] || '';
-      return titleA.localeCompare(titleB);
+      // 4. Titre
+      return metaA.title.localeCompare(metaB.title);
     });
 
     let imageUrls = imageEntries.map(entry => entry[1]);
 
     imageUrls.forEach((url, index) => {
-      // Nouvelle convention : Titre_Taille_Type_Statut
+      // Nouvelle convention : [Ordre_]Titre_Taille_Type_StatutOuPrix
       const rawFilename = decodeURIComponent(url).split('/').pop().split('.')[0];
-      const filename = rawFilename;
-      const parts = filename.split('_');
+      const parts = rawFilename.split('_');
+      if (/^\d+$/.test(parts[0])) parts.shift();
       
-      let title = parts[0] || filename;
+      let title = parts[0] || rawFilename;
       let size = parts[1] || "";
       let type = parts[2] || "Acrylique";
       let statusPart = parts[3] || "dispo";
-      let status = statusPart.startsWith('vendu') ? 'vendu' : 'dispo';
+      
+      let isSold = statusPart.startsWith('vendu');
+      let price = (!isSold && statusPart !== 'dispo') ? statusPart : null;
       
       let subtitle = size ? `${type} - ${size}` : type;
 
@@ -120,10 +135,15 @@ if (galleryGrids.length > 0) {
       overlay.appendChild(h3);
       overlay.appendChild(p);
 
-      if (status === 'vendu') {
+      if (isSold) {
         const badge = document.createElement('div');
         badge.className = 'sold-badge';
         badge.textContent = 'VENDU';
+        galleryItem.appendChild(badge);
+      } else if (price) {
+        const badge = document.createElement('div');
+        badge.className = 'price-badge';
+        badge.textContent = price;
         galleryItem.appendChild(badge);
       }
 
