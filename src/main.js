@@ -84,37 +84,78 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Lightbox Logic
 const lightbox = document.getElementById('lightbox');
+const lightboxWrapper = document.getElementById('lightbox-wrapper');
 const lightboxImg = document.getElementById('lightbox-img');
-const closeBtn = document.getElementById('lightbox-close');
+const lightboxClose = document.getElementById('lightbox-close');
 
-if (lightbox && lightboxImg && closeBtn) {
-  if (galleryGrid) {
+let isZoomed = false;
+
+function closeLightbox() {
+  if (lightbox) {
+    lightbox.classList.remove('active');
+    document.body.style.overflow = 'auto';
+  }
+  isZoomed = false;
+  if(lightboxWrapper) {
+    lightboxWrapper.classList.remove('zoomed');
+    lightboxImg.style.transformOrigin = 'center center';
+  }
+}
+
+if (lightbox && lightboxClose) {
+  lightboxClose.addEventListener('click', closeLightbox);
+
+  lightbox.addEventListener('click', (e) => {
+    // Si on clique en dehors de l'image (sur le fond noir)
+    if (e.target === lightbox) {
+      closeLightbox();
+    }
+  });
+
+  if (lightboxWrapper) {
+    lightboxWrapper.addEventListener('click', (e) => {
+      e.stopPropagation();
+      isZoomed = !isZoomed;
+      if (isZoomed) {
+        lightboxWrapper.classList.add('zoomed');
+        updateZoomOrigin(e);
+      } else {
+        lightboxWrapper.classList.remove('zoomed');
+        lightboxImg.style.transformOrigin = 'center center';
+      }
+    });
+
+    lightboxWrapper.addEventListener('mousemove', (e) => {
+      if (isZoomed) {
+        updateZoomOrigin(e);
+      }
+    });
+  }
+}
+
+function updateZoomOrigin(e) {
+  if (!lightboxWrapper || !lightboxImg) return;
+  const rect = lightboxWrapper.getBoundingClientRect();
+  const x = ((e.clientX - rect.left) / rect.width) * 100;
+  const y = ((e.clientY - rect.top) / rect.height) * 100;
+  lightboxImg.style.transformOrigin = `${x}% ${y}%`;
+}
+
+if (galleryGrids.length > 0) {
+  galleryGrids.forEach(galleryGrid => {
     galleryGrid.addEventListener('click', (e) => {
       const item = e.target.closest('.gallery-item');
       if (item) {
         const img = item.querySelector('img');
-        if (img) {
+        if (img && lightbox && lightboxImg) {
           lightboxImg.src = img.src;
           lightbox.classList.add('active');
           document.body.style.overflow = 'hidden'; // prevent scroll
         }
       }
     });
-  }
-
-  closeBtn.addEventListener('click', () => {
-    lightbox.classList.remove('active');
-    document.body.style.overflow = 'auto';
-  });
-
-  lightbox.addEventListener('click', (e) => {
-    if (e.target === lightbox) {
-      lightbox.classList.remove('active');
-      document.body.style.overflow = 'auto';
-    }
   });
 }
-
 // Contact Form Logic
 document.getElementById('contact-form')?.addEventListener('submit', async function(e) {
   e.preventDefault();
