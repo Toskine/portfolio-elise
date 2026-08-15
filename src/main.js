@@ -27,34 +27,48 @@ const observer = new IntersectionObserver((entries, observer) => {
 }, observerOptions);
 
 // Dynamic Gallery Generation using Vite Glob
-const galleryGrid = document.getElementById('gallery-grid');
-if (galleryGrid) {
-  const folder = galleryGrid.getAttribute('data-folder');
-  let imagesObj = {};
-  
-  // Vite va lire le contenu de ces dossiers au moment du build
-  if (folder === 'images') {
-    imagesObj = import.meta.glob('./assets/images/*.{jpg,jpeg,png}', { query: '?url', import: 'default', eager: true });
-  } else if (folder === 'vendues') {
-    imagesObj = import.meta.glob('./assets/vendues/*.{jpg,jpeg,png}', { query: '?url', import: 'default', eager: true });
-  }
+const galleryGrids = document.querySelectorAll('.gallery-grid');
+if (galleryGrids.length > 0) {
+  galleryGrids.forEach(galleryGrid => {
+    const folder = galleryGrid.getAttribute('data-folder');
+    let imagesObj = {};
+    
+    // Vite va lire le contenu de ces dossiers au moment du build
+    if (folder === 'images') {
+      imagesObj = import.meta.glob('./assets/images/*.{jpg,jpeg,png}', { query: '?url', import: 'default', eager: true });
+    } else if (folder === 'vendues') {
+      imagesObj = import.meta.glob('./assets/vendues/*.{jpg,jpeg,png}', { query: '?url', import: 'default', eager: true });
+    }
 
-  const imageUrls = Object.values(imagesObj);
+    const imageUrls = Object.values(imagesObj);
 
-  imageUrls.forEach((url, index) => {
-    const title = `Œuvre ${index + 1}`;
-    const subtitle = folder === 'vendues' ? "Vendue" : "Peinture d'Élise";
+    imageUrls.forEach((url, index) => {
+      const title = `Œuvre ${index + 1}`;
 
-    const item = document.createElement('div');
-    item.className = 'gallery-item';
-    item.innerHTML = `
-      <img src="${url}" alt="${title}" loading="lazy" class="gallery-image">
-      <div class="overlay">
-        <h3>${title}</h3>
-        <p>${subtitle}</p>
-      </div>
-    `;
-    galleryGrid.appendChild(item);
+      const galleryItem = document.createElement('div');
+      galleryItem.className = 'gallery-item';
+
+      const img = document.createElement('img');
+      img.src = url;
+      img.alt = title;
+
+      const overlay = document.createElement('div');
+      overlay.className = 'overlay';
+
+      const h3 = document.createElement('h3');
+      h3.textContent = title;
+
+      const p = document.createElement('p');
+      p.textContent = folder === 'vendues' ? 'Vendue' : 'Acrylique sur toile';
+
+      overlay.appendChild(h3);
+      overlay.appendChild(p);
+
+      galleryItem.appendChild(img);
+      galleryItem.appendChild(overlay);
+
+      galleryGrid.appendChild(galleryItem);
+    });
   });
 }
 
