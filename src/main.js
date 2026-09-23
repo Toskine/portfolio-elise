@@ -34,18 +34,23 @@ if (galleryGrids.length > 0) {
     let imagesObj = {};
     
     // Chargement de toutes les images
-    const allImages1 = import.meta.glob('./assets/images/*.{jpg,jpeg,png}', { query: '?url', import: 'default', eager: true });
-    const allImages2 = import.meta.glob('./assets/collections/marine/*.{jpg,jpeg,png}', { query: '?url', import: 'default', eager: true });
+    const allImages1 = import.meta.glob('./assets/images/*.{jpg,jpeg,png,JPG,JPEG,PNG}', { query: '?url', import: 'default', eager: true });
+    const allCollections = import.meta.glob('./assets/collections/**/*.{jpg,jpeg,png,JPG,JPEG,PNG}', { query: '?url', import: 'default', eager: true });
 
     if (folder === 'images') {
       // La galerie principale affiche TOUT
-      imagesObj = { ...allImages1, ...allImages2 };
-    } else if (folder === 'collections/marine') {
-      // La page collection n'affiche que sa collection
-      imagesObj = allImages2;
+      imagesObj = { ...allImages1, ...allCollections };
     } else if (folder === 'vendues') {
       // La section vendues affiche tout, mais on filtrera ensuite
-      imagesObj = { ...allImages1, ...allImages2 };
+      imagesObj = { ...allImages1, ...allCollections };
+    } else if (folder && folder.startsWith('collections/')) {
+      // Collection spécifique (ex: collections/marine, collections/magnette)
+      const subfolder = folder.replace(/^collections\//i, '').toLowerCase();
+      imagesObj = Object.fromEntries(
+        Object.entries(allCollections).filter(([path]) => {
+          return path.toLowerCase().includes(`/collections/${subfolder}/`);
+        })
+      );
     }
 
     let imageEntries = Object.entries(imagesObj);
@@ -89,11 +94,18 @@ if (galleryGrids.length > 0) {
         return metaA.order - metaB.order;
       }
 
-      // 3. Dossier (les collections marines ensemble)
+      // 3. Dossier (les peintures classiques d'abord, puis regroupées par collection)
       const folderA = a[0].includes('collections/') ? 1 : 0;
       const folderB = b[0].includes('collections/') ? 1 : 0;
       if (folderA !== folderB) {
         return folderA - folderB;
+      }
+      if (folderA === 1 && folderB === 1) {
+        const colA = (a[0].split('collections/')[1] || '').split('/')[0].toLowerCase();
+        const colB = (b[0].split('collections/')[1] || '').split('/')[0].toLowerCase();
+        if (colA !== colB) {
+          return colA.localeCompare(colB);
+        }
       }
       
       // 4. Titre
@@ -117,7 +129,13 @@ if (galleryGrids.length > 0) {
       let isSold = cleanStatus === 'vendu';
       let price = (!isSold && cleanStatus !== 'dispo') ? cleanStatus : null;
       
-      let subtitle = size ? `${type} - ${size}` : type;
+      // Formater la taille / catégorie (ex: "magnette" -> "Magnette")
+      let formattedSize = size;
+      if (formattedSize && !/^\d/.test(formattedSize)) {
+        formattedSize = formattedSize.charAt(0).toUpperCase() + formattedSize.slice(1);
+      }
+      
+      let subtitle = formattedSize ? `${type} - ${formattedSize}` : type;
 
       const galleryItem = document.createElement('div');
       galleryItem.className = 'gallery-item';
@@ -156,6 +174,57 @@ if (galleryGrids.length > 0) {
       galleryGrid.appendChild(galleryItem);
     });
   });
+}
+
+// Collections Tabs Management
+const collectionTabBtns = document.querySelectorAll('.collection-tab-btn');
+const collectionSections = document.querySelectorAll('.gallery-section[data-collection]');
+
+if (collectionTabBtns.length > 0) {
+  function activateCollectionTab(target) {
+    collectionTabBtns.forEach(btn => {
+      btn.classList.toggle('active', btn.getAttribute('data-target') === target);
+    });
+
+    collectionSections.forEach(section => {
+      const collectionName = section.getAttribute('data-collection');
+      if (target === 'all' || collectionName === target) {
+        section.style.display = 'block';
+        section.querySelectorAll('.gallery-item').forEach(el => {
+          el.style.opacity = '1';
+          el.style.transform = 'translateY(0)';
+        });
+      } else {
+        section.style.display = 'none';
+      }
+    });
+  }
+
+  collectionTabBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const target = btn.getAttribute('data-target');
+      activateCollectionTab(target);
+      if (target === 'all') {
+        history.replaceState(null, '', window.location.pathname);
+      } else {
+        history.replaceState(null, '', `#${target}`);
+      }
+    });
+  });
+
+  function handleHash() {
+    if (window.location.hash) {
+      let hash = window.location.hash.substring(1).toLowerCase();
+      if (hash === 'magnettes') hash = 'magnette';
+      const exists = Array.from(collectionTabBtns).some(btn => btn.getAttribute('data-target') === hash);
+      if (exists) {
+        activateCollectionTab(hash);
+      }
+    }
+  }
+
+  handleHash();
+  window.addEventListener('hashchange', handleHash);
 }
 
 // Apply reveal styles initially and observe

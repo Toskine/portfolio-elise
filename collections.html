@@ -16,7 +16,14 @@
       <ul class="nav-links">
         <li><a href="index.html#home">Accueil</a></li>
         <li><a href="index.html#gallery">Galerie</a></li>
-        <li><a href="collections.html">Collections</a></li>
+        <li class="nav-item-dropdown">
+          <a href="collections.html">Collections</a>
+          <ul class="dropdown-menu">
+            <li><a href="collections.html">Toutes les collections</a></li>
+            <li><a href="collections.html#marine">Collection Marine</a></li>
+            <li><a href="collections.html#magnette">Collection Magnettes</a></li>
+          </ul>
+        </li>
         <li><a href="index.html#about">À Propos</a></li>
         <li><a href="index.html#vendues">Œuvres Vendues</a></li>
         <li><a href="index.html#contact" class="btn-nav">Contact</a></li>
@@ -30,9 +37,25 @@
         </div>
       </section>
 
-      <section id="marine" class="gallery-section" style="background-color: var(--card-light); margin-top: 4rem;">
+      <!-- Navigation par onglets des collections -->
+      <div class="collection-tabs-wrapper">
+        <div class="collection-tabs">
+          <button class="collection-tab-btn active" data-target="all">Toutes</button>
+          <button class="collection-tab-btn" data-target="marine">Marine</button>
+          <button class="collection-tab-btn" data-target="magnette">Magnettes</button>
+        </div>
+      </div>
+
+      <section id="marine" data-collection="marine" class="gallery-section" style="background-color: var(--card-light); margin-top: 2rem;">
         <h2 style="color: var(--primary-coral);">Collection <span class="script-accent">Marine</span></h2>
         <div class="gallery-grid" data-folder="collections/marine">
+          <!-- Les images seront insérées dynamiquement ici par main.js -->
+        </div>
+      </section>
+
+      <section id="magnette" data-collection="magnette" class="gallery-section" style="background-color: var(--card-light); margin-top: 4rem;">
+        <h2 style="color: var(--primary-coral);">Collection <span class="script-accent">Magnettes</span></h2>
+        <div class="gallery-grid" data-folder="collections/magnette">
           <!-- Les images seront insérées dynamiquement ici par main.js -->
         </div>
       </section>
